@@ -1,5 +1,10 @@
 # CLAUDE.md — Calorie Tracker (Cloudflare Workers + Nuxt)
 
+## Working Rules
+
+- **Always use context7 MCP** to look up current documentation for NuxtHub, Nuxt, Drizzle, Cloudflare Workers, and any other library before writing code. Do not guess at APIs — verify them first.
+- **No unnecessary dependencies.** Wrangler v4 with Miniflare v3 runs on the actual workerd runtime locally. D1, R2, KV are all simulated locally at no cost. Do not add packages beyond what NuxtHub/Drizzle require. Note: `@libsql/client` IS required — NuxtHub uses it as the local SQLite driver for dev (not Miniflare's D1 simulation).
+
 ## Project Overview
 
 A simple, single-user calorie tracker for my wife. She uploads a food photo or types a meal description, and AI estimates the calories. Built on Cloudflare Workers with Nuxt, D1 (SQLite), R2 (image storage), and Workers AI (vision model).

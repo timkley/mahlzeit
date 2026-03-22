@@ -1,0 +1,28 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "mahlzeit",
+	"compatibility_date": "2026-03-22",
+	"compatibility_flags": ["nodejs_compat"],
+	"routes": [
+		{ "pattern": "mahlzeit.timkley.dev", "custom_domain": true }
+	],
+	"main": ".output/server/index.mjs",
+	"assets": {
+		"directory": ".output/public"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "mahlzeit-db",
+			"database_id": "f36921df-e1cd-4a6f-ae80-2a00d19c63b6",
+			"migrations_dir": "server/db/migrations/sqlite",
+			"migrations_table": "_hub_migrations"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "BLOB",
+			"bucket_name": "mahlzeit-blob"
+		}
+	]
+}

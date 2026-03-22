@@ -1,31 +1,43 @@
+import tailwindcss from '@tailwindcss/vite'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // Nuxt 4 compatibility date — tells Nuxt which behavior version to use
-  // (like Laravel's PHP version constraint in composer.json)
   compatibilityDate: '2026-03-22',
-
-  // Vue devtools — great for debugging components, state, routes in the browser
   devtools: { enabled: true },
 
-  // Modules = like Laravel packages/service providers
-  // They hook into the framework and add functionality
   modules: [
-    '@nuxthub/core',       // Cloudflare bindings (D1, R2, AI)
-    '@nuxtjs/tailwindcss', // Tailwind CSS
+    '@nuxthub/core',
+    'shadcn-nuxt',
   ],
 
-  // NuxtHub config — tells Cloudflare which services to provision
-  hub: {
-    // D1 database (SQLite on the edge)
-    // 'sqlite' dialect → uses libsql locally, D1 in production
-    db: 'sqlite',
-    // R2 blob storage (for food photos)
-    blob: true,
-    // Workers AI binding (for food image analysis)
-    ai: true,
+  // shadcn-vue component config
+  shadcn: {
+    prefix: '',
+    componentDir: './app/components/ui',
   },
 
-  // Future flags for Nuxt 4 forward-compatibility
+  // Tailwind v4 via Vite plugin (replaces @nuxtjs/tailwindcss)
+  css: ['~/assets/css/tailwind.css'],
+  vite: {
+    plugins: [tailwindcss()],
+  },
+
+  hub: {
+    db: 'sqlite',
+    blob: true,
+  },
+
+  // Server-only env vars (not exposed to client)
+  runtimeConfig: {
+    openrouterApiKey: process.env.OPENROUTER_API_KEY || '',
+    usdaApiKey: process.env.USDA_API_KEY || '',
+    devUserEmail: process.env.DEV_USER_EMAIL || '',
+  },
+
+  experimental: {
+    viewTransition: true,
+  },
+
   future: {
     compatibilityVersion: 4,
   },

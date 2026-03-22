@@ -1,6 +1,12 @@
+<script setup lang="ts">
+useHead({
+  titleTemplate: (title) => title || 'Kalorientracker',
+})
+</script>
+
 <template>
   <div>
     <NuxtRouteAnnouncer />
-    <NuxtWelcome />
+    <NuxtPage />
   </div>
 </template>
