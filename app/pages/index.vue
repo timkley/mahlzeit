@@ -26,8 +26,27 @@ const { data: meals, refresh: refreshMeals } = useFetch('/api/meals', {
   watch: [selectedDate],
 })
 
-const { data: goalData } = useFetch('/api/settings/goal')
+const { data: goalData, refresh: refreshGoal } = useFetch('/api/settings/goal')
 const goal = computed(() => goalData.value?.goal ?? 2000)
+
+// --- Goal editing ---
+const isEditingGoal = ref(false)
+const goalInput = ref(2000)
+
+function startEditGoal() {
+  goalInput.value = goal.value
+  isEditingGoal.value = true
+}
+
+async function saveGoal() {
+  if (goalInput.value < 1) return
+  await $fetch('/api/settings/goal', {
+    method: 'PUT',
+    body: { goal: goalInput.value },
+  })
+  isEditingGoal.value = false
+  await refreshGoal()
+}
 
 // 7-day rolling stats
 const { data: weeklyData } = useFetch('/api/stats/weekly', {
@@ -202,8 +221,26 @@ async function deleteMeal(id: number) {
               <span class="text-3xl font-bold" :class="progressColor" style="view-transition-name: calorie-total">
                 {{ totalCalories.toLocaleString('de-DE') }}
               </span>
-              <span class="text-sm text-muted-foreground">
-                / {{ goal.toLocaleString('de-DE') }} kcal
+              <span v-if="!isEditingGoal" class="text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors" @click="startEditGoal">
+                / {{ goal.toLocaleString('de-DE') }} kcal <i class="ri-pencil-line text-xs" />
+              </span>
+              <span v-else class="flex items-center gap-1">
+                <span class="text-sm text-muted-foreground">/</span>
+                <Input
+                  v-model.number="goalInput"
+                  type="number"
+                  min="1"
+                  class="w-20 h-7 text-sm text-right"
+                  @keydown.enter="saveGoal"
+                  @keydown.escape="isEditingGoal = false"
+                />
+                <span class="text-sm text-muted-foreground">kcal</span>
+                <Button variant="ghost" size="icon" class="h-7 w-7" @click="saveGoal">
+                  <i class="ri-check-line" />
+                </Button>
+                <Button variant="ghost" size="icon" class="h-7 w-7" @click="isEditingGoal = false">
+                  <i class="ri-close-line" />
+                </Button>
               </span>
             </div>
             <Progress :model-value="progressPercent" class="h-3 mt-2" />
