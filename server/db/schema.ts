@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core'
+import { sqliteTable, text, integer, real, unique } from 'drizzle-orm/sqlite-core'
 
 export const meals = sqliteTable('meals', {
   id: integer().primaryKey({ autoIncrement: true }),
@@ -22,6 +22,6 @@ export const settings = sqliteTable('settings', {
   userEmail: text('user_email').notNull(),
   key: text().notNull(),
   value: text().notNull(),
-}, (table) => [
-  { columns: [table.userEmail, table.key], unique: true },
+}, (t) => [
+  unique().on(t.userEmail, t.key),
 ])

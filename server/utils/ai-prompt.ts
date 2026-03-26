@@ -9,6 +9,15 @@ export function buildFoodAnalysisPrompt(description?: string): string {
   return `You are a nutritionist assistant. Analyze this food image and estimate the nutritional content.
 ${descPart}
 
+IMPORTANT — Nutrition label detection:
+If the image shows a product package or nutrition label (Nährwerttabelle / Nutrition Facts), you MUST:
+- Read the exact values printed on the label — do NOT estimate or guess.
+- Use the per-100g values from the label if available, otherwise use per-serving values.
+- Set source to "label" for each item whose data comes from the label.
+- Set portion_grams to 100 when reporting per-100g label values.
+- Only report values you can clearly read. If a value is unreadable, use 0.
+
+If the image shows actual food (not a package), estimate as usual and set source to "estimate":
 1. Identify each food item visible in the image
 2. Estimate portion sizes in grams
 3. Calculate calories and macros per item using standard nutritional data
@@ -26,7 +35,9 @@ The description may be in German. Handle common German food names and portion de
 1. Identify each food item
 2. Estimate portion sizes in grams
 3. Calculate calories and macros per item
-4. Sum up the totals`
+4. Sum up the totals
+
+Set source to "estimate" for every item.`
 }
 
 // JSON schema enforced by OpenRouter structured outputs
@@ -48,8 +59,9 @@ export const foodAnalysisSchema = {
             protein: { type: 'number', description: 'Protein in grams' },
             carbs: { type: 'number', description: 'Carbohydrates in grams' },
             fat: { type: 'number', description: 'Fat in grams' },
+            source: { type: 'string', enum: ['label', 'estimate'], description: '"label" if values were read from a nutrition label, "estimate" if AI-estimated' },
           },
-          required: ['name', 'portion_grams', 'calories', 'protein', 'carbs', 'fat'],
+          required: ['name', 'portion_grams', 'calories', 'protein', 'carbs', 'fat', 'source'],
           additionalProperties: false,
         },
       },

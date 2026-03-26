@@ -107,9 +107,9 @@ const editingId = ref<number | null>(null)
 const editForm = ref({
   description: '',
   calories: 0 as number,
-  protein: null as number | null,
-  carbs: null as number | null,
-  fat: null as number | null,
+  protein: undefined as number | undefined,
+  carbs: undefined as number | undefined,
+  fat: undefined as number | undefined,
   mealTime: '',
 })
 const isSaving = ref(false)
@@ -138,9 +138,9 @@ function applyEdit(meal: any) {
   editForm.value = {
     description: meal.description,
     calories: meal.calories,
-    protein: meal.protein,
-    carbs: meal.carbs,
-    fat: meal.fat,
+    protein: meal.protein ?? undefined,
+    carbs: meal.carbs ?? undefined,
+    fat: meal.fat ?? undefined,
     mealTime: meal.mealTime ?? 'snack',
   }
 }

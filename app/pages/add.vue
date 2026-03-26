@@ -45,7 +45,7 @@ interface AnalysisItem {
   name: string
   portion_grams: number
   per100g: { calories: number; protein: number; carbs: number; fat: number }
-  source: 'usda' | 'ai'
+  source: 'usda' | 'ai' | 'label'
   usda_match: string | null
 }
 const analysisItems = ref<AnalysisItem[]>([])
@@ -93,7 +93,8 @@ async function addImages(files: File[]) {
 }
 
 function removeImage(index: number) {
-  URL.revokeObjectURL(aiImages.value[index].preview)
+  const img = aiImages.value[index]
+  if (img) URL.revokeObjectURL(img.preview)
   aiImages.value.splice(index, 1)
 }
 
@@ -351,7 +352,8 @@ async function saveMeal() {
                     <div class="min-w-0">
                       <p class="font-medium text-sm">{{ item.name }}</p>
                       <p class="text-xs text-muted-foreground">
-                        <Badge v-if="item.source === 'usda'" variant="secondary" class="text-[10px] px-1 py-0">USDA</Badge>
+                        <Badge v-if="item.source === 'label'" variant="secondary" class="text-[10px] px-1 py-0">Etikett</Badge>
+                        <Badge v-else-if="item.source === 'usda'" variant="secondary" class="text-[10px] px-1 py-0">USDA</Badge>
                         <Badge v-else variant="outline" class="text-[10px] px-1 py-0">KI</Badge>
                         <span v-if="item.usda_match" class="ml-1">{{ item.usda_match }}</span>
                       </p>

@@ -29,9 +29,9 @@ export default defineNuxtConfig({
 
   // Server-only env vars (not exposed to client)
   runtimeConfig: {
-    openrouterApiKey: process.env.OPENROUTER_API_KEY || '',
-    usdaApiKey: process.env.USDA_API_KEY || '',
-    devUserEmail: process.env.DEV_USER_EMAIL || '',
+    openrouterApiKey: '',
+    usdaApiKey: '',
+    devUserEmail: '',
   },
 
   experimental: {
